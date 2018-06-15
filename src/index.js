@@ -70,7 +70,7 @@ const genId = () =>
 const isUndefined = val => typeof val === "undefined";
 
 const uniq = (items, field) => {
-  if (isUndefined(field)) {
+  if (!isUndefined(field)) {
     return items.reduce(
       (acc, item) =>
         acc.find(elem => elem.id === item.id) ? acc : [...acc, item],

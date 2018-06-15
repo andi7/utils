@@ -181,7 +181,7 @@ var isUndefined = function isUndefined(val) {
 };
 
 var uniq = function uniq(items, field) {
-  if (isUndefined(field)) {
+  if (!isUndefined(field)) {
     return items.reduce(function (acc, item) {
       return acc.find(function (elem) {
         return elem.id === item.id;
