@@ -5,8 +5,6 @@ const formattedPath = path =>
     .join(".")
     .replace(/\.+/g, ".");
 
-const _range = (n, m) => [...Array(m - n).keys()].map(k => k + n);
-
 const matchedKey = key => {
   const match = key.match(/\[(\d+)\]/);
 
@@ -17,4 +15,4 @@ const matchedKey = key => {
   return { match, value: key };
 };
 
-export { matchedKey, formattedPath, _range };
+export { formattedPath, matchedKey };

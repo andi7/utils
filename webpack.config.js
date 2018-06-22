@@ -7,6 +7,11 @@ module.exports = {
     filename: "index.js",
     libraryTarget: "umd"
   },
+  resolve: {
+    alias: {
+      _src: path.resolve("src/")
+    }
+  },
   module: {
     rules: [
       {
