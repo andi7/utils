@@ -4,14 +4,24 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleNameMapper": {
+      "_src": "<rootDir>/src/",
+      "_test": "<rootDir>/src/"
+    }
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-jest": "^23.0.1",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-3": "^6.24.1",
+    "jest": "^23.1.0",
     "webpack": "^3.8.1"
   },
   "author": "Andi Ndrecka",

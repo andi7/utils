@@ -83,40 +83,11 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var isObj = function isObj(val) {
-  return val && val instanceof Object;
-};
-
-var isPlainObj = function isPlainObj(val) {
-  return !!val && val.constructor === Object;
-};
-
-var isUndefined = function isUndefined(val) {
-  return typeof val === "undefined";
-};
-
-var isArray = function isArray(val) {
-  return Array.isArray(val);
-};
-
-exports.isObj = isObj;
-exports.isPlainObj = isPlainObj;
-exports.isUndefined = isUndefined;
-exports.isArray = isArray;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.range = exports.compose = exports.genId = exports.clone = undefined;
+exports.typeCheck = exports.range = exports.compose = exports.genId = exports.clone = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _type = __webpack_require__(1);
 
 var _helpers = __webpack_require__(3);
 
@@ -160,10 +131,71 @@ var range = function range() {
   return (0, _helpers._range)(0, from);
 };
 
+var typeCheck = function typeCheck(fn, flags) {
+  return function () {
+    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      args[_key3] = arguments[_key3];
+    }
+
+    flags.forEach(function (flag, i) {
+      var type = flag.split("|")[0] || "any";
+      var isOptional = !!flag.match("optional") && (0, _type.isUndefined)(args[i]);
+
+      if (!isOptional && type !== "any" && (0, _helpers._getType)(args[i]) !== type) {
+        throw new Error("Type error: param " + i + " must be of type " + type);
+      }
+    });
+
+    return fn.apply(undefined, args);
+  };
+};
+
 exports.clone = clone;
 exports.genId = genId;
 exports.compose = compose;
 exports.range = range;
+exports.typeCheck = typeCheck;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isObj = function isObj(val) {
+  return !!val && val instanceof Object;
+};
+
+var isPlainObj = function isPlainObj(val) {
+  return !!val && val.constructor === Object;
+};
+
+var isUndefined = function isUndefined(val) {
+  return typeof val === "undefined";
+};
+
+var isArray = function isArray(val) {
+  return Array.isArray(val);
+};
+
+var isString = function isString(val) {
+  return typeof val === "string";
+};
+
+var isNumber = function isNumber(val) {
+  return typeof val === "number";
+};
+
+exports.isObj = isObj;
+exports.isPlainObj = isPlainObj;
+exports.isUndefined = isUndefined;
+exports.isArray = isArray;
+exports.isString = isString;
+exports.isNumber = isNumber;
 
 /***/ }),
 /* 2 */
@@ -176,7 +208,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _common = __webpack_require__(1);
+var _common = __webpack_require__(0);
 
 Object.keys(_common).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -224,7 +256,7 @@ Object.keys(_string).forEach(function (key) {
   });
 });
 
-var _type = __webpack_require__(0);
+var _type = __webpack_require__(1);
 
 Object.keys(_type).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -255,7 +287,12 @@ var _range = function _range(n, m) {
   });
 };
 
+var _getType = function _getType(val) {
+  return {}.toString.call(val).match(/\s(\w+)/)[1].toLowerCase();
+};
+
 exports._range = _range;
+exports._getType = _getType;
 
 /***/ }),
 /* 4 */
@@ -269,21 +306,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.uniq = undefined;
 
-var _type = __webpack_require__(0);
+var _type = __webpack_require__(1);
+
+var _common = __webpack_require__(0);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var uniq = function uniq(items, field) {
+var uniq = (0, _common.typeCheck)(function (items, field) {
   if (!(0, _type.isUndefined)(field)) {
     return items.reduce(function (acc, item) {
       return acc.find(function (elem) {
-        return elem.id === item.id;
+        return elem[field] === item[field];
       }) ? acc : [].concat(_toConsumableArray(acc), [item]);
     }, []);
   }
 
   return Array.from(new Set(items));
-};
+}, ["array", "string|optional"]);
 
 exports.uniq = uniq;
 
@@ -305,9 +344,9 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _type = __webpack_require__(0);
+var _type = __webpack_require__(1);
 
-var _common = __webpack_require__(1);
+var _common = __webpack_require__(0);
 
 var _helpers = __webpack_require__(6);
 
@@ -437,9 +476,18 @@ exports.matchedKey = matchedKey;
 "use strict";
 
 
-var capitalize = function capitalize(str) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.capitalize = undefined;
+
+var _common = __webpack_require__(0);
+
+var capitalize = (0, _common.typeCheck)(function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
-};
+}, ["string"]);
+
+exports.capitalize = capitalize;
 
 /***/ })
 /******/ ]);
