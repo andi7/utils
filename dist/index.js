@@ -83,13 +83,19 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.typeCheck = exports.range = exports.compose = exports.genId = exports.clone = undefined;
+exports.changeRoute = exports.getQs = exports.decodeQs = exports.typeCheck = exports.range = exports.compose = exports.genId = exports.clone = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _type = __webpack_require__(1);
 
 var _helpers = __webpack_require__(3);
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -138,11 +144,11 @@ var typeCheck = function typeCheck(fn, flags) {
     }
 
     flags.forEach(function (flag, i) {
-      var type = flag.split("|")[0] || "any";
-      var isOptional = !!flag.match("optional") && (0, _type.isUndefined)(args[i]);
+      var type = flag.split('|')[0] || 'any';
+      var isOptional = !!flag.match('optional') && (0, _type.isUndefined)(args[i]);
 
-      if (!isOptional && type !== "any" && (0, _helpers._getType)(args[i]) !== type) {
-        throw new Error("Type error: param " + i + " must be of type " + type);
+      if (!isOptional && type !== 'any' && (0, _helpers._getType)(args[i]) !== type) {
+        throw new Error('Type error: param ' + i + ' must be of type ' + type);
       }
     });
 
@@ -150,11 +156,48 @@ var typeCheck = function typeCheck(fn, flags) {
   };
 };
 
+var decodeQs = function decodeQs() {
+  var searchUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return searchUrl.slice(1).split('&').reduce(function (acc, item) {
+    var _item$split = item.split('='),
+        _item$split2 = _slicedToArray(_item$split, 2),
+        key = _item$split2[0],
+        value = _item$split2[1];
+
+    return _extends({}, acc, _defineProperty({}, key, decodeURIComponent(value)));
+  }, {});
+};
+
+var getQs = function getQs(obj) {
+  return obj ? '?' + Object.entries(obj).map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        val = _ref2[1];
+
+    var value = (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object' ? btoa(JSON.stringify(val)) : val;
+    return key + '=' + encodeURIComponent(value);
+  }).join('&') : '';
+};
+
+var changeRoute = function changeRoute(params) {
+  var _window$location = window.location,
+      origin = _window$location.origin,
+      pathname = _window$location.pathname;
+
+  var url = '' + origin + pathname;
+  var path = url + getQs(params);
+
+  window.history.pushState({ path: path }, '', path);
+};
+
 exports.clone = clone;
 exports.genId = genId;
 exports.compose = compose;
 exports.range = range;
 exports.typeCheck = typeCheck;
+exports.decodeQs = decodeQs;
+exports.getQs = getQs;
+exports.changeRoute = changeRoute;
 
 /***/ }),
 /* 1 */
