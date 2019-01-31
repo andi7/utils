@@ -347,7 +347,7 @@ exports._getType = _getType;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.uniq = undefined;
+exports.chunk = exports.uniq = undefined;
 
 var _type = __webpack_require__(1);
 
@@ -365,9 +365,20 @@ var uniq = (0, _common.typeCheck)(function (items, field) {
   }
 
   return Array.from(new Set(items));
-}, ["array", "string|optional"]);
+}, ['array', 'string|optional']);
+
+var chunk = function chunk(arr, size) {
+  var returnValue = [];
+
+  for (var i = 0; i < arr.length; i += size) {
+    returnValue.push(arr.slice(i, i + size));
+  }
+
+  return returnValue;
+};
 
 exports.uniq = uniq;
+exports.chunk = chunk;
 
 /***/ }),
 /* 5 */
