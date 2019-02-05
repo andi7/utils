@@ -83,6 +83,47 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var isObj = function isObj(val) {
+  return !!val && val instanceof Object;
+};
+
+var isPlainObj = function isPlainObj(val) {
+  return !!val && val.constructor === Object;
+};
+
+var isUndefined = function isUndefined(val) {
+  return typeof val === "undefined";
+};
+
+var isArray = function isArray(val) {
+  return Array.isArray(val);
+};
+
+var isString = function isString(val) {
+  return typeof val === "string";
+};
+
+var isNumber = function isNumber(val) {
+  return typeof val === "number";
+};
+
+exports.isObj = isObj;
+exports.isPlainObj = isPlainObj;
+exports.isUndefined = isUndefined;
+exports.isArray = isArray;
+exports.isString = isString;
+exports.isNumber = isNumber;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.changeRoute = exports.getQs = exports.decodeQs = exports.typeCheck = exports.range = exports.compose = exports.genId = exports.clone = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -91,7 +132,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _type = __webpack_require__(1);
+var _type = __webpack_require__(0);
 
 var _helpers = __webpack_require__(3);
 
@@ -200,47 +241,6 @@ exports.getQs = getQs;
 exports.changeRoute = changeRoute;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var isObj = function isObj(val) {
-  return !!val && val instanceof Object;
-};
-
-var isPlainObj = function isPlainObj(val) {
-  return !!val && val.constructor === Object;
-};
-
-var isUndefined = function isUndefined(val) {
-  return typeof val === "undefined";
-};
-
-var isArray = function isArray(val) {
-  return Array.isArray(val);
-};
-
-var isString = function isString(val) {
-  return typeof val === "string";
-};
-
-var isNumber = function isNumber(val) {
-  return typeof val === "number";
-};
-
-exports.isObj = isObj;
-exports.isPlainObj = isPlainObj;
-exports.isUndefined = isUndefined;
-exports.isArray = isArray;
-exports.isString = isString;
-exports.isNumber = isNumber;
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -251,7 +251,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _common = __webpack_require__(0);
+var _common = __webpack_require__(1);
 
 Object.keys(_common).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -299,7 +299,7 @@ Object.keys(_string).forEach(function (key) {
   });
 });
 
-var _type = __webpack_require__(1);
+var _type = __webpack_require__(0);
 
 Object.keys(_type).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -349,13 +349,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.chunk = exports.uniq = undefined;
 
-var _type = __webpack_require__(1);
-
-var _common = __webpack_require__(0);
+var _type = __webpack_require__(0);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var uniq = (0, _common.typeCheck)(function (items, field) {
+var uniq = function uniq(items, field) {
   if (!(0, _type.isUndefined)(field)) {
     return items.reduce(function (acc, item) {
       return acc.find(function (elem) {
@@ -365,7 +363,7 @@ var uniq = (0, _common.typeCheck)(function (items, field) {
   }
 
   return Array.from(new Set(items));
-}, ['array', 'string|optional']);
+};
 
 var chunk = function chunk(arr, size) {
   var returnValue = [];
@@ -390,7 +388,7 @@ exports.chunk = chunk;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.mapValues = exports.mapKeys = exports.getPath = exports.setPath = exports.deepFindKey = undefined;
+exports.deepMapKeys = exports.mapValues = exports.mapKeys = exports.getPath = exports.setPath = exports.deepFindKey = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -398,9 +396,9 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _type = __webpack_require__(1);
+var _type = __webpack_require__(0);
 
-var _common = __webpack_require__(0);
+var _common = __webpack_require__(1);
 
 var _helpers = __webpack_require__(6);
 
@@ -414,7 +412,7 @@ var deepFindKey = function deepFindKey(obj, key) {
 
   for (var objKey in obj) {
     var val = obj[objKey];
-    if ((typeof val === "undefined" ? "undefined" : _typeof(val)) === "object") {
+    if ((typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') {
       var found = deepFindKey(val, key);
       if (found) {
         return found;
@@ -425,15 +423,15 @@ var deepFindKey = function deepFindKey(obj, key) {
 
 var setPath = function setPath() {
   var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+  var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var val = arguments[2];
 
   if ((0, _type.isUndefined)(val)) {
     return;
   }
 
-  var keys = (0, _helpers.formattedPath)(path).split(".").filter(function (key) {
-    return key !== "";
+  var keys = (0, _helpers.formattedPath)(path).split('.').filter(function (key) {
+    return key !== '';
   });
 
   while (keys.length > 0) {
@@ -453,8 +451,8 @@ var setPath = function setPath() {
 
 var getPath = function getPath() {
   var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
-  return (0, _helpers.formattedPath)(path).replace(/\[(\d+)\]/g, "$1").split(".").reduce(function (obj, key) {
+  var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return (0, _helpers.formattedPath)(path).replace(/\[(\d+)\]/g, '$1').split('.').reduce(function (obj, key) {
     return obj ? obj[key] : undefined;
   }, object);
 };
@@ -465,7 +463,7 @@ var mapKeys = function mapKeys(obj, fn) {
         key = _ref2[0],
         val = _ref2[1];
 
-    return _extends({}, acc, _defineProperty({}, fn(val, key), val));
+    return _extends({}, acc, _defineProperty({}, fn(key, val), val));
   }, {});
 };
 
@@ -475,15 +473,37 @@ var mapValues = function mapValues(obj, fn) {
         key = _ref4[0],
         val = _ref4[1];
 
-    return _extends({}, acc, _defineProperty({}, key, fn(val, key)));
+    return _extends({}, acc, _defineProperty({}, key, fn(key, val)));
+  }, {});
+};
+
+var deepMapKeys = function deepMapKeys(obj, fn) {
+  if (!(0, _type.isPlainObj)(obj)) {
+    return obj;
+  }
+
+  return Object.entries(obj).reduce(function (acc, _ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        key = _ref6[0],
+        value = _ref6[1];
+
+    if ((0, _type.isPlainObj)(value)) {
+      value = deepMapKeys(value, fn);
+    } else if ((0, _type.isArray)(value)) {
+      value = value.map(function (val) {
+        return deepMapKeys(val, fn);
+      });
+    }
+
+    return _extends({}, acc, _defineProperty({}, fn(key, value), value));
   }, {});
 };
 
 var merge = function merge(obj, other) {
-  return Object.entries(other).reduce(function (acc, _ref5) {
-    var _ref6 = _slicedToArray(_ref5, 2),
-        key = _ref6[0],
-        val = _ref6[1];
+  return Object.entries(other).reduce(function (acc, _ref7) {
+    var _ref8 = _slicedToArray(_ref7, 2),
+        key = _ref8[0],
+        val = _ref8[1];
 
     acc[key] = (0, _type.isObj)(val) && (0, _type.isObj)(acc[key]) ? merge(acc[key], val) : val;
     return acc;
@@ -495,6 +515,7 @@ exports.setPath = setPath;
 exports.getPath = getPath;
 exports.mapKeys = mapKeys;
 exports.mapValues = mapValues;
+exports.deepMapKeys = deepMapKeys;
 
 /***/ }),
 /* 6 */
@@ -533,13 +554,9 @@ exports.matchedKey = matchedKey;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.capitalize = undefined;
-
-var _common = __webpack_require__(0);
-
-var capitalize = (0, _common.typeCheck)(function (str) {
+var capitalize = function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
-}, ["string"]);
+};
 
 exports.capitalize = capitalize;
 

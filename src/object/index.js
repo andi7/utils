@@ -1,6 +1,6 @@
-import { isObj, isUndefined } from "_src/type";
-import { clone } from "_src/common";
-import { formattedPath, matchedKey } from "./helpers";
+import { isObj, isPlainObj, isArray, isUndefined } from '_src/type';
+import { clone } from '_src/common';
+import { formattedPath, matchedKey } from './helpers';
 
 const deepFindKey = (obj, key) => {
   const immediate = obj && obj[key];
@@ -10,7 +10,7 @@ const deepFindKey = (obj, key) => {
 
   for (let objKey in obj) {
     const val = obj[objKey];
-    if (typeof val === "object") {
+    if (typeof val === 'object') {
       const found = deepFindKey(val, key);
       if (found) {
         return found;
@@ -19,14 +19,14 @@ const deepFindKey = (obj, key) => {
   }
 };
 
-const setPath = (obj = {}, path = "", val) => {
+const setPath = (obj = {}, path = '', val) => {
   if (isUndefined(val)) {
     return;
   }
 
   const keys = formattedPath(path)
-    .split(".")
-    .filter(key => key !== "");
+    .split('.')
+    .filter(key => key !== '');
 
   while (keys.length > 0) {
     let key = matchedKey(keys.shift()).value;
@@ -43,23 +43,33 @@ const setPath = (obj = {}, path = "", val) => {
   }
 };
 
-const getPath = (object = {}, path = "") =>
+const getPath = (object = {}, path = '') =>
   formattedPath(path)
-    .replace(/\[(\d+)\]/g, "$1")
-    .split(".")
+    .replace(/\[(\d+)\]/g, '$1')
+    .split('.')
     .reduce((obj, key) => (obj ? obj[key] : undefined), object);
 
 const mapKeys = (obj, fn) =>
-  Object.entries(obj).reduce(
-    (acc, [key, val]) => ({ ...acc, [fn(val, key)]: val }),
-    {}
-  );
+  Object.entries(obj).reduce((acc, [key, val]) => ({ ...acc, [fn(key, val)]: val }), {});
 
 const mapValues = (obj, fn) =>
-  Object.entries(obj).reduce(
-    (acc, [key, val]) => ({ ...acc, [key]: fn(val, key) }),
-    {}
-  );
+  Object.entries(obj).reduce((acc, [key, val]) => ({ ...acc, [key]: fn(key, val) }), {});
+
+const deepMapKeys = (obj, fn) => {
+  if (!isPlainObj(obj)) {
+    return obj;
+  }
+
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    if (isPlainObj(value)) {
+      value = deepMapKeys(value, fn);
+    } else if (isArray(value)) {
+      value = value.map(val => deepMapKeys(val, fn));
+    }
+
+    return { ...acc, [fn(key, value)]: value };
+  }, {});
+};
 
 const merge = (obj, other) => {
   return Object.entries(other).reduce((acc, [key, val]) => {
@@ -68,4 +78,4 @@ const merge = (obj, other) => {
   }, clone(obj));
 };
 
-export { deepFindKey, setPath, getPath, mapKeys, mapValues };
+export { deepFindKey, setPath, getPath, mapKeys, mapValues, deepMapKeys };
