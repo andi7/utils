@@ -405,9 +405,9 @@ var _helpers = __webpack_require__(6);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var deepFindKey = function deepFindKey(obj, key) {
-  var immediate = obj && obj[key];
+  var immediate = obj && obj.hasOwnProperty(key);
   if (!!immediate) {
-    return immediate;
+    return obj[key];
   }
 
   for (var objKey in obj) {

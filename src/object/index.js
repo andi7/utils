@@ -3,9 +3,9 @@ import { clone } from '_src/common';
 import { formattedPath, matchedKey } from './helpers';
 
 const deepFindKey = (obj, key) => {
-  const immediate = obj && obj[key];
+  const immediate = obj && obj.hasOwnProperty(key);
   if (!!immediate) {
-    return immediate;
+    return obj[key];
   }
 
   for (let objKey in obj) {
