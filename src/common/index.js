@@ -53,7 +53,7 @@ const getQs = obj =>
     : '';
 
 const changeRoute = params => {
-  if (window) {
+  if (typeof window !== 'undefined') {
     const { origin, pathname } = window.location;
     const url = `${origin}${pathname}`;
     const path = url + getQs(params);

@@ -221,7 +221,7 @@ var getQs = function getQs(obj) {
 };
 
 var changeRoute = function changeRoute(params) {
-  if (window) {
+  if (typeof window !== 'undefined') {
     var _window$location = window.location,
         origin = _window$location.origin,
         pathname = _window$location.pathname;
