@@ -221,14 +221,16 @@ var getQs = function getQs(obj) {
 };
 
 var changeRoute = function changeRoute(params) {
-  var _window$location = window.location,
-      origin = _window$location.origin,
-      pathname = _window$location.pathname;
+  if (window) {
+    var _window$location = window.location,
+        origin = _window$location.origin,
+        pathname = _window$location.pathname;
 
-  var url = '' + origin + pathname;
-  var path = url + getQs(params);
+    var url = '' + origin + pathname;
+    var path = url + getQs(params);
 
-  window.history.pushState({ path: path }, '', path);
+    window.history.pushState({ path: path }, '', path);
+  }
 };
 
 exports.clone = clone;

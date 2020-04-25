@@ -3,11 +3,7 @@ import { _range, _getType } from './helpers';
 
 const clone = data => JSON.parse(JSON.stringify(data));
 
-const genId = () =>
-  Date.now().toString(36) +
-  Math.random()
-    .toString(36)
-    .substr(2, 5);
+const genId = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 
 const compose = (...fns) => val => fns.reduce((acc, fn) => fn(acc), val);
 
@@ -57,11 +53,13 @@ const getQs = obj =>
     : '';
 
 const changeRoute = params => {
-  const { origin, pathname } = window.location;
-  const url = `${origin}${pathname}`;
-  const path = url + getQs(params);
+  if (window) {
+    const { origin, pathname } = window.location;
+    const url = `${origin}${pathname}`;
+    const path = url + getQs(params);
 
-  window.history.pushState({ path }, '', path);
+    window.history.pushState({ path }, '', path);
+  }
 };
 
 export { clone, genId, compose, range, typeCheck, decodeQs, getQs, changeRoute };
