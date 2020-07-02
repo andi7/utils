@@ -78,4 +78,20 @@ const merge = (obj, other) => {
   }, clone(obj));
 };
 
-export { deepFindKey, setPath, getPath, mapKeys, mapValues, deepMapKeys };
+const stripNullObj = obj => {
+  let stripped = clone(obj);
+
+  Object.keys(obj).forEach(key => {
+    const value = stripped[key];
+
+    if (value === null) {
+      delete stripped[key];
+    } else if (typeof value === 'object' && !Array.isArray(value)) {
+      stripped[key] = stripNullObj(value);
+    }
+  });
+
+  return stripped;
+};
+
+export { deepFindKey, setPath, getPath, mapKeys, mapValues, deepMapKeys, stripNullObj };

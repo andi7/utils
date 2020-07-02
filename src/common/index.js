@@ -1,4 +1,6 @@
 import { isUndefined } from '_src/type';
+import { deepMapKeys } from '_src/object';
+
 import { _range, _getType } from './helpers';
 
 const clone = data => JSON.parse(JSON.stringify(data));
@@ -62,4 +64,27 @@ const changeRoute = params => {
   }
 };
 
-export { clone, genId, compose, range, typeCheck, decodeQs, getQs, changeRoute };
+const snakeToCamelCase = string =>
+  string.toLowerCase().replace(/\B_(\w)/g, (_, group) => group.toUpperCase());
+
+const camelToSnakeCase = string =>
+  string.replace(/\B([A-Z])/g, (_, group) => `_${group.toLowerCase()}`);
+
+const objToCamelCase = obj => deepMapKeys(obj, key => snakeToCamelCase(key));
+
+const objToSnakeCase = obj => deepMapKeys(obj, key => camelToSnakeCase(key));
+
+export {
+  clone,
+  genId,
+  compose,
+  range,
+  typeCheck,
+  decodeQs,
+  getQs,
+  changeRoute,
+  snakeToCamelCase,
+  camelToSnakeCase,
+  objToCamelCase,
+  objToSnakeCase
+};
